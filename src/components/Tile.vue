@@ -5,13 +5,13 @@
 </script>
 
 <template>
-    <article class="tileMain">
+    <button class="tileMain">
         <div class="background" :style="{ backgroundImage: 'url(' + data.url + ')' }"></div>
         <section class="mainTileContent">
             <img :style="{ content: 'url(' + data.url + ')' }">
             <p>{{ data.title }}</p>
         </section>
-    </article>
+    </button>
 </template>
 
 <style scoped>
@@ -29,6 +29,12 @@
         height: 325px;
         color: white;
         max-width: 90vw;
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 100%;
+        border-radius: 20px;
     }
 
     .background {
