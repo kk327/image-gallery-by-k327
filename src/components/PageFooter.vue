@@ -5,7 +5,8 @@
 
     const props = defineProps([
         "page",
-        "maxPages"
+        "maxPages",
+        "disable"
     ]);
 
     function changePage(value) {
@@ -16,11 +17,11 @@
 
 <template>
     <footer>
-        <button @click="page == 1 ? {} : changePage(-1)" :class="{ grayedButton: page == 1 }" title="Previous page">
+        <button @click="page == 1 ? {} : changePage(-1)" :class="{ grayedButton: page == 1 }" :disabled="disable" title="Previous page">
             <img src="@/assets/arrow.png" alt="<" id="leftButtonImage">
         </button>
         <p>Page {{ maxPages > 0 ? page : "0" }} / {{ maxPages }}</p>
-        <button @click="page >= maxPages ? {} : changePage(1)" :class="{ grayedButton: page >= props.maxPages }" title="Next page">
+        <button @click="page >= maxPages ? {} : changePage(1)" :class="{ grayedButton: page >= props.maxPages }" :disabled="disable" title="Next page">
             <img src="@/assets/arrow.png" alt=">">
         </button>
     </footer>

@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watchEffect, watch } from 'vue';
+  import { ref, watchEffect, watch, computed } from 'vue';
   import Tile from "./components/Tile.vue";
   import SearchBar from "./components/SearchBar.vue";
   import PageFooter from "./components/PageFooter.vue";
@@ -32,6 +32,10 @@
       data.value = unslicedData.value.slice((page.value - 1) * 49, page.value * 49);
       maxPages.value = Math.ceil(unslicedData.value.length / 49);
     }
+  })
+
+  const disableMainButtons = computed(() => {
+    return selectedImage.value != -1 || siteInformationPopupVisible.value;
   })
 
   function filterBySearch(e) {
@@ -95,15 +99,15 @@
 
 <template>
   <div>
-    <SearchBar @updateSearch="(value) => updateSearchFilter(value)" :filterByFavorites="filterByFavorites" :siteInformation="siteInformation" :allowFavoriting="allowFavoriting" @filterByFavorites="changeFilterByFavoritesValue" @showSiteInformation="changeSiteInformationVisibility('hidden')" />
+    <SearchBar @updateSearch="(value) => updateSearchFilter(value)" :filterByFavorites="filterByFavorites" :siteInformation="siteInformation" :allowFavoriting="allowFavoriting" :disable="disableMainButtons" @filterByFavorites="changeFilterByFavoritesValue" @showSiteInformation="changeSiteInformationVisibility('hidden')" />
     <main ref="tilePanel">
       <p id="loadingText" v-if="data.length == 0">
         <img src="@/assets/loading.png" alt="Loading..." v-if="allData.length == 0">
         <span v-else>No images found</span>
       </p>
-      <Tile class="tile" v-for="(currentData, index) in data" :data="currentData" @click="selectImage(index)" />
+      <Tile class="tile" v-for="(currentData, index) in data" :data="currentData" @click="selectImage(index)" :disabled="disableMainButtons" />
     </main>
-    <PageFooter :page="page" @changePage="(value) => page = value" :maxPages="maxPages" />
+    <PageFooter :page="page" @changePage="(value) => page = value" :maxPages="maxPages" :disable="disableMainButtons" />
     <SelectedImagePanel ref="selectedPhotoPanel" v-if="selectedImage >= 0" :id="selectedImage" :data="selectedImage >= 0 ? unslicedData[selectedImage] : 0" :imageCount="unslicedData.length" :favoriteImages="favoriteImages" :allowFavoriting="allowFavoriting" @unselectImage="unselectImage" @changeSelectedImage="(value) => selectedImage += value" @favoriteImage="favoriteImage" />
     <SiteInformationPopup v-if="siteInformationPopupVisible" :siteInformation="siteInformation" @hideSiteInformation="changeSiteInformationVisibility('visible')" />
   </div>
